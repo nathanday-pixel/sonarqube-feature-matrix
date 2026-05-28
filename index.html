@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SonarQube Product Feature Matrix</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  /* Sonar brand palette */
+  --sonar-orange:#F4611A;
+  --sonar-dark:#1B1F2A;
+  --sonar-mid:#2C3248;
+  --sonar-blue:#1B6FEA;
+  --sonar-blue-light:#E8F0FE;
+  --sonar-teal:#00BCD4;
+
+  --bg:#FFFFFF;
+  --bg2:#F5F6F8;
+  --bg3:#EBEDF2;
+  --text:#1B1F2A;
+  --text2:#4A5068;
+  --text3:#9198B0;
+  --border:rgba(27,31,42,0.08);
+  --border2:rgba(27,31,42,0.15);
+  --radius:6px;
+  --radius-lg:10px;
+  --accent:var(--sonar-orange);
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#141720;--bg2:#1B1F2A;--bg3:#252A3A;
+    --text:#E8EAF0;--text2:#9198B0;--text3:#555D78;
+    --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.14);
+  }
+}
+html{font-size:14px;font-family:'DM Sans',system-ui,sans-serif}
+body{background:var(--bg);color:var(--text);min-height:100vh}
+button{font-family:'DM Sans',system-ui,sans-serif;cursor:pointer}
+input,select{font-family:'DM Sans',system-ui,sans-serif;font-size:13px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);padding:6px 10px;color:var(--text);outline:none;transition:border-color 0.15s,box-shadow 0.15s}
+input:focus,select:focus{border-color:var(--sonar-orange);box-shadow:0 0 0 3px rgba(244,97,26,0.12)}
+input[type=checkbox]{width:14px;height:14px;padding:0;accent-color:var(--sonar-orange);vertical-align:middle}
+
+/* Top nav bar */
+.topbar{background:var(--sonar-dark);padding:0 1.5rem;display:flex;align-items:center;height:52px;gap:16px;margin-bottom:0}
+.topbar-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-mark{width:28px;height:28px;background:var(--sonar-orange);border-radius:5px;display:flex;align-items:center;justify-content:center}
+.logo-mark svg{width:16px;height:16px;fill:#fff}
+.logo-name{font-size:15px;font-weight:600;color:#fff;letter-spacing:-0.01em}
+.topbar-sep{width:1px;height:20px;background:rgba(255,255,255,0.15)}
+.topbar-title{font-size:13px;color:rgba(255,255,255,0.6);font-weight:400}
+
+/* Page */
+.page{max-width:1280px;margin:0 auto;padding:1.5rem 1.5rem}
+.header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:1.25rem}
+.page-eyebrow{font-size:11px;font-weight:600;color:var(--sonar-orange);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px}
+.page-title{font-size:21px;font-weight:600;color:var(--text);letter-spacing:-0.02em;margin-bottom:3px}
+.page-sub{font-size:13px;color:var(--text2)}
+
+/* Nav buttons */
+.nav-group{display:flex;gap:5px}
+.nav-btn{padding:6px 14px;border-radius:var(--radius);border:1px solid var(--border2);background:transparent;color:var(--text2);font-size:12px;font-weight:500;display:inline-flex;align-items:center;gap:5px;transition:all 0.13s}
+.nav-btn:hover{background:var(--bg2);color:var(--text)}
+.nav-btn.active{background:var(--sonar-orange);color:#fff;border-color:var(--sonar-orange)}
+
+/* Product chips */
+.chips-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:0.8rem}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:20px;border:1.5px solid;font-size:12px;font-weight:500;cursor:pointer;transition:all 0.13s;line-height:1}
+
+/* Filter bar */
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:1rem}
+.search-wrap{position:relative;flex:1 1 180px;min-width:140px}
+.search-wrap i{position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--text3);pointer-events:none}
+.search-wrap input{width:100%;padding-left:28px}
+
+/* Matrix */
+.matrix-wrap{border:1px solid var(--border2);border-radius:var(--radius-lg);overflow:hidden}
+.matrix-header-row{display:grid;background:var(--sonar-dark);border-bottom:1px solid var(--border2);position:sticky;top:0;z-index:10}
+.feat-col-header{padding:10px 16px;font-size:10px;color:rgba(255,255,255,0.45);font-weight:600;letter-spacing:0.08em;text-transform:uppercase}
+.prod-col-header{padding:10px 8px;border-left:1px solid rgba(255,255,255,0.08);text-align:center;transition:background 0.13s;cursor:default}
+.section-row{display:grid;width:100%;background:var(--bg2);border-bottom:1px solid var(--border);text-align:left;transition:background 0.1s}
+.section-row:hover{background:var(--bg3)}
+.section-label-cell{padding:8px 16px;display:flex;align-items:center;gap:8px}
+.feat-row{display:grid}
+.feat-name-cell{padding:8px 16px;display:flex;align-items:center;gap:7px;font-size:13px;color:var(--text);line-height:1.4}
+.val-cell{border-left:1px solid var(--border);display:flex;align-items:center;justify-content:center;padding:5px 4px;min-height:38px;transition:background 0.1s}
+.diff-dot{width:5px;height:5px;border-radius:50%;background:var(--sonar-orange);flex-shrink:0}
+.empty-state{padding:3rem;text-align:center;color:var(--text3)}
+.beta-badge{display:inline-flex;align-items:center;font-size:9px;font-weight:600;padding:1px 5px;border-radius:3px;background:rgba(244,97,26,0.12);color:var(--sonar-orange);letter-spacing:0.06em;text-transform:uppercase;margin-left:4px;vertical-align:middle}
+
+/* Overview cards */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px}
+.edition-card{border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border2);background:var(--bg)}
+.card-header{padding:16px 20px;border-bottom:1px solid var(--border)}
+.card-header-accent{height:3px;border-radius:3px 3px 0 0;margin-bottom:0}
+.section-line{padding:8px 20px;border-bottom:1px solid var(--border)}
+.tag{display:inline-flex;font-size:10px;padding:2px 7px;border-radius:4px;line-height:1.6;margin:2px;word-break:break-word}
+
+/* Legend */
+.legend-bar{margin-top:1rem;display:flex;gap:14px;flex-wrap:wrap;align-items:center;border-top:1px solid var(--border);padding-top:0.75rem}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+</style>
+</head>
+<body>
+
+<!-- Top nav -->
+<div class="topbar">
+  <a class="topbar-logo" href="https://www.sonarsource.com" target="_blank" rel="noopener" aria-label="Sonar home">
+    <div class="logo-mark">
+      <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2C5.58 2 2 5.58 2 10s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 3a2 2 0 110 4 2 2 0 010-4zm0 9.5c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08s5.97 1.09 6 3.08c-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+    </div>
+    <span class="logo-name">Sonar</span>
+  </a>
+  <div class="topbar-sep"></div>
+  <span class="topbar-title">Product Feature Matrix</span>
+</div>
+
+<div class="page">
+  <h1 class="sr-only">SonarQube Product Feature Matrix — interactive comparison</h1>
+
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <p class="page-eyebrow">SonarQube</p>
+      <h2 class="page-title">Product feature matrix</h2>
+      <p class="page-sub" id="subtitle">Loading…</p>
+    </div>
+    <div class="nav-group">
+      <button class="nav-btn active" onclick="setView('matrix')" id="nav-matrix"><i class="ti ti-table" aria-hidden="true"></i> Matrix</button>
+      <button class="nav-btn" onclick="setView('overview')" id="nav-overview"><i class="ti ti-layout-grid" aria-hidden="true"></i> Overview</button>
+    </div>
+  </div>
+
+  <!-- Chips -->
+  <div class="chips-row" id="chips-row"></div>
+
+  <!-- Filters -->
+  <div class="filter-bar" id="filter-bar">
+    <div class="search-wrap">
+      <i class="ti ti-search" aria-hidden="true"></i>
+      <input type="text" id="search-input" placeholder="Search features…" oninput="render()" aria-label="Search features">
+    </div>
+    <select id="section-select" onchange="render()" aria-label="Filter by section">
+      <option value="all">All sections</option>
+    </select>
+    <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text2);white-space:nowrap;cursor:pointer">
+      <input type="checkbox" id="diffs-only" onchange="render()"> Differences only
+    </label>
+  </div>
+
+  <div id="main-content"></div>
+
+  <!-- Legend -->
+  <div class="legend-bar">
+    <span style="font-size:11px;color:var(--text3)">Legend:</span>
+    <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text2)"><i class="ti ti-check" style="color:#22C55E;font-size:13px" aria-hidden="true"></i> Included</span>
+    <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text2)"><i class="ti ti-minus" style="color:#EF4444;font-size:13px" aria-hidden="true"></i> Not included</span>
+    <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text2)"><span class="diff-dot"></span> Values differ</span>
+    <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text2)"><span class="beta-badge">Beta</span> Cloud open beta</span>
+    <span style="font-size:11px;color:var(--text2)">Text = partial or conditional</span>
+    <span style="margin-left:auto;font-size:11px;color:var(--text3)">Source: sonarsource.com · May 2026</span>
+  </div>
+</div>
+
+<script>
+const CHECK=true,NO=false;
+// BETA marker — renders with an orange badge in the cell
+const BETA='__BETA__';
+
+const PRODUCTS=[
+  {id:"cloud_team", label:"Cloud",  sub:"Team",       color:"#F4611A",bg:"#FEF0E8",tc:"#7A2D09"},
+  {id:"cloud_ent",  label:"Cloud",  sub:"Enterprise", color:"#1B6FEA",bg:"#E8F0FE",tc:"#0C2E6E"},
+  {id:"server_dev", label:"Server", sub:"Developer",  color:"#7C3AED",bg:"#EDE9FE",tc:"#3B0764"},
+  {id:"server_ent", label:"Server", sub:"Enterprise", color:"#1B1F2A",bg:"#EBEDF2",tc:"#1B1F2A"},
+];
+
+const SECTIONS=[
+  {id:"general",label:"General & Setup",icon:"ti-settings",features:[
+    {id:"deployment",   label:"Deployment model",                     cloud_team:"SaaS (managed)",cloud_ent:"SaaS (managed)",server_dev:"Self-hosted",server_ent:"Self-hosted"},
+    {id:"loc",          label:"Recommended LOC",                      cloud_team:"Up to 1.9M",cloud_ent:"From 5M (unlimited)",server_dev:"100K+",server_ent:"1M+"},
+    {id:"auto_analysis",label:"Automatic analysis for new projects",  cloud_team:CHECK,cloud_ent:CHECK,server_dev:CHECK,server_ent:CHECK},
+    {id:"ide_sync",     label:"IDE sync (SonarQube for IDE)",         cloud_team:CHECK,cloud_ent:CHECK,server_dev:CHECK,server_ent:CHECK},
+    {id:"devops_int",   label:"DevOps platform integration",          cloud_team:CHECK,cloud_ent:CHECK,server_dev:CHECK,server_ent:"Unlimited instances"},
+    {id:"multi_org",    label:"Multiple orgs per subscription",       cloud_team:NO,cloud_ent:CHECK,server_dev:"N/A",server_ent:"N/A"},
+    {id:"ent_hier",     label:"Enterprise hierarchy & mapping",       cloud_team:NO,cloud_ent:CHECK,server_dev:NO,server_ent:CHECK},
+    {id:"scale_mgmt",   label:"Project onboarding at scale",          cloud_team:NO,cloud_ent:CHECK,server_dev:NO,server_ent:CHECK},
+    {id:"monorepo",     label:"Monorepo integration",                 cloud_team:NO,cloud_ent:CHECK,server_dev:NO,server_ent:CHECK},
+    {id:"sarif",        label:"SARIF third-party report integration", cloud_team:NO,cloud_ent:NO,server_dev:CHECK,server_ent:CHECK},
+    {id:"autoconfig",   label:"AutoConfig for C and C++ projects",    cloud_team:NO,cloud_ent:NO,server_dev:CHECK,server_ent:CHECK},
+    {id:"rule_prio",    label:"Set rule priority",                    cloud_team:NO,cloud_ent:NO,server_dev:NO,server_ent:CHECK},
+  ]},
+  {id:"analysis",label:"Analysis",icon:"ti-code",features:[
+    {id:"languages",   label:"Languages & frameworks",               cloud_team:"30+",cloud_ent:"36+ (ABAP, COBOL, Apex…)",server_dev:"34",server_ent:"40 (incl. COBOL, VB6…)"},
+    {id:"branches",    label:"Branch analysis",                     cloud_team:"Unlimited",cloud_ent:"Unlimited",server_dev:CHECK,server_ent:CHECK},
+    {id:"pr_analysis", label:"Pull request analysis",               cloud_team:"Unlimited",cloud_ent:"Unlimited",server_dev:CHECK,server_ent:CHECK},
+    {id:"ai_code",     label:"Detect issues in AI-generated code",  cloud_team:CHECK,cloud_ent:CHECK,server_dev:CHECK,server_ent:CHECK},
+    {id:"cicd",        label:"CI/CD pipeline integration",          cloud_team:CHECK,cloud_ent:CHECK,server_dev:CHECK,server_ent:CHECK},
+    {id:"test_cov",    label:"Test coverage reporting",             cloud_team:CHECK,cloud_ent:CHECK,server_dev:CHECK,server_ent:CHECK},
+    {id:"parallel",    label:"Parallel processing (large teams)",   cloud_team:CHECK,cloud_ent:CHECK,server_dev:CHECK,server_ent:CHECK},
+  ]},
+  {id:"quality",label:"Code Quality",icon:"ti-shield-check",features:[
+    {id:"q_profiles",  label:"Custom quality profiles",             cloud_team:CHECK,cloud_ent:CHECK,server_dev:CHECK,server_ent:CHECK},
+    {id:"q_gates",     label:"Custom quality gates",                cloud_team:CHECK,cloud_ent:CHECK,server_dev:CHECK,server_ent:CHECK},
+    {id:"bug_detect",  label:"Bug & reliability detection",         cloud_team:CHECK,cloud_ent:CHECK,server_dev:CHECK,server_ent:CHECK},
+    {id:"tech_debt",   label:"Technical debt tracking",             cloud_team:CHECK,cloud_ent:CHECK,server_dev:CHECK,server_ent:CHECK},
+    {id:"dataflow",    label:"Advanced dataflow bug detection",     cloud_team:CHECK,cloud_ent:CHECK,server_dev:CHECK,server_ent:CHECK},
+    {id:"arch_mgmt",   label:"Architecture management",             cloud_team:CHECK,cloud_ent:CHECK,server_dev:"Java only",server_ent:"Java only"},
+    {id:"misra",       label:"MISRA C++:2023 compliance",           cloud_team:NO,cloud_ent:CHECK,server_dev:NO,server_ent:CHECK},
+  ]},
+  {id:"security",label:"Code Security",icon:"ti-lock",features:[
+    {id:"sast",         label:"SAST",                                cloud_team:CHECK,cloud_ent:CHECK,server_dev:CHECK,server_ent:CHECK},
+    {id:"secrets",      label:"Secrets detection",                   cloud_team:CHECK,cloud_ent:CHECK,server_dev:CHECK,server_ent:CHECK},
+    {id:"taint",        label:"Taint analysis (cross-function)",     cloud_team:CHECK,cloud_ent:CHECK,server_dev:CHECK,server_ent:CHECK},
+    {id:"iac",          label:"IaC scanning",                       cloud_team:CHECK,cloud_ent:CHECK,server_dev:CHECK,server_ent:CHECK},
+    {id:"custom_sec",   label:"Custom security engine config",       cloud_team:NO,cloud_ent:NO,server_dev:NO,server_ent:CHECK},
+    {id:"custom_secret",label:"Custom secret detection patterns",    cloud_team:NO,cloud_ent:NO,server_dev:NO,server_ent:CHECK},
+    {id:"sca",          label:"SCA & Advanced SAST",                 cloud_team:NO,cloud_ent:"Add-on",server_dev:NO,server_ent:"Add-on"},
+    {id:"gh_security",  label:"Security alerts in GitHub interface", cloud_team:NO,cloud_ent:CHECK,server_dev:CHECK,server_ent:CHECK},
+    {id:"gh_advanced",  label:"GitHub Advanced Security integration",cloud_team:NO,cloud_ent:CHECK,server_dev:NO,server_ent:NO},
+  ]},
+  {id:"reporting",label:"Reporting",icon:"ti-chart-bar",features:[
+    {id:"dashboard",   label:"Code quality dashboard",              cloud_team:CHECK,cloud_ent:CHECK,server_dev:CHECK,server_ent:CHECK},
+    {id:"applications",label:"Applications (multi-project view)",   cloud_team:NO,cloud_ent:NO,server_dev:CHECK,server_ent:CHECK},
+    {id:"portfolios",  label:"Portfolios",                         cloud_team:NO,cloud_ent:CHECK,server_dev:NO,server_ent:CHECK},
+    {id:"pdf_reports", label:"Project PDF reports",                cloud_team:NO,cloud_ent:CHECK,server_dev:NO,server_ent:CHECK},
+    {id:"port_dash",   label:"Customizable portfolio dashboards",   cloud_team:NO,cloud_ent:CHECK,server_dev:NO,server_ent:CHECK},
+    {id:"sec_reports", label:"Security reports (OWASP, CWE, PCI)", cloud_team:NO,cloud_ent:CHECK,server_dev:NO,server_ent:CHECK},
+    {id:"regulatory",  label:"Regulatory reports & audit logs",    cloud_team:NO,cloud_ent:CHECK,server_dev:NO,server_ent:CHECK},
+  ]},
+  {id:"ent_sec",label:"Enterprise Security",icon:"ti-user-shield",features:[
+    {id:"auth",        label:"Authentication",                       cloud_team:"DevOps platform",cloud_ent:"SSO via OIDC & SAML",server_dev:"Built-in / LDAP",server_ent:"SAML SSO"},
+    {id:"group_sync",  label:"Group synchronization",                cloud_team:NO,cloud_ent:CHECK,server_dev:NO,server_ent:CHECK},
+    {id:"scim",        label:"Auto-provisioning (SCIM)",             cloud_team:NO,cloud_ent:CHECK,server_dev:NO,server_ent:CHECK},
+    {id:"ip_allow",    label:"IP allowlist",                         cloud_team:NO,cloud_ent:CHECK,server_dev:NO,server_ent:NO},
+    {id:"byok",        label:"CMK / BYOK encryption",                cloud_team:NO,cloud_ent:CHECK,server_dev:NO,server_ent:NO},
+    {id:"audit_logs",  label:"Audit logs",                           cloud_team:NO,cloud_ent:CHECK,server_dev:NO,server_ent:CHECK},
+    {id:"session_to",  label:"Active session timeout control",       cloud_team:NO,cloud_ent:NO,server_dev:NO,server_ent:CHECK},
+    {id:"token_life",  label:"Maximum token lifetime",               cloud_team:NO,cloud_ent:NO,server_dev:NO,server_ent:CHECK},
+    {id:"sla",         label:"Dedicated enterprise SLA",             cloud_team:NO,cloud_ent:CHECK,server_dev:NO,server_ent:NO},
+  ]},
+  {id:"ai",label:"AI Tools",icon:"ti-robot",features:[
+    {id:"ai_codefix",        label:"AI CodeFix",                              cloud_team:CHECK,cloud_ent:CHECK,server_dev:CHECK,server_ent:CHECK},
+    {id:"mcp_server",        label:"MCP Server",                             cloud_team:CHECK,cloud_ent:CHECK,server_dev:CHECK,server_ent:CHECK},
+    {id:"remediation",       label:"Remediation Agent (GitHub)",             cloud_team:NO,cloud_ent:CHECK,server_dev:NO,server_ent:NO},
+    {id:"agentic_analysis",  label:"Agentic Analysis",                       cloud_team:BETA,cloud_ent:BETA,server_dev:NO,server_ent:NO},
+    {id:"context_aug",       label:"Context Augmentation",                   cloud_team:BETA,cloud_ent:BETA,server_dev:NO,server_ent:NO},
+    {id:"gitar",             label:"Gitar (AI code review in CI)",           cloud_team:CHECK,cloud_ent:CHECK,server_dev:NO,server_ent:NO},
+    {id:"sonarsweep",        label:"SonarSweep (LLM output improvement)",    cloud_team:BETA,cloud_ent:BETA,server_dev:NO,server_ent:NO},
+  ]},
+  {id:"integrations",label:"Integrations",icon:"ti-plug",features:[
+    {id:"jira",        label:"Jira Cloud",                           cloud_team:CHECK,cloud_ent:CHECK,server_dev:CHECK,server_ent:CHECK},
+    {id:"webhooks",    label:"Webhooks",                             cloud_team:CHECK,cloud_ent:CHECK,server_dev:CHECK,server_ent:CHECK},
+    {id:"slack_int",   label:"Slack integration",                    cloud_team:CHECK,cloud_ent:CHECK,server_dev:NO,server_ent:NO},
+    {id:"jfrog",       label:"JFrog Evidence Collection",            cloud_team:NO,cloud_ent:CHECK,server_dev:NO,server_ent:NO},
+    {id:"onprem",      label:"On-premises DevOps platforms",         cloud_team:NO,cloud_ent:NO,server_dev:CHECK,server_ent:CHECK},
+    {id:"plugins",     label:"Custom plugin ecosystem",              cloud_team:NO,cloud_ent:NO,server_dev:"Limited",server_ent:"Full access"},
+  ]},
+  {id:"support",label:"Support & Pricing",icon:"ti-headset",features:[
+    {id:"community",    label:"Community support",                   cloud_team:CHECK,cloud_ent:CHECK,server_dev:CHECK,server_ent:CHECK},
+    {id:"commercial",   label:"Commercial support",                  cloud_team:"Available (contact sales)",cloud_ent:"Included from 5M LOC",server_dev:"Available (add-on)",server_ent:"Included from 30M LOC"},
+    {id:"premium_sup",  label:"24/7 premium support",                cloud_team:NO,cloud_ent:"Available (add-on)",server_dev:NO,server_ent:"Available (add-on)"},
+    {id:"pricing_model",label:"Pricing model",                       cloud_team:"Annual · per LOC",cloud_ent:"Annual · custom",server_dev:"Annual · per LOC",server_ent:"Annual · per LOC"},
+    {id:"entry_price",  label:"Entry price",                         cloud_team:"From 100K LOC — $375/yr",cloud_ent:"Contact sales",server_dev:"$750/year",server_ent:"Contact sales"},
+  ]},
+];
+
+const totalFeats=SECTIONS.reduce((a,s)=>a+s.features.length,0);
+document.getElementById('subtitle').textContent=`4 editions · ${totalFeats} features compared`;
+
+let S={
+  view:'matrix',
+  sel:['cloud_team','cloud_ent','server_dev','server_ent'],
+  expanded:new Set(SECTIONS.map(s=>s.id)),
+  hl:null,
+};
+
+const secSel=document.getElementById('section-select');
+SECTIONS.forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.label;secSel.appendChild(o);});
+
+function setView(v){
+  S.view=v;
+  document.getElementById('nav-matrix').className='nav-btn'+(v==='matrix'?' active':'');
+  document.getElementById('nav-overview').className='nav-btn'+(v==='overview'?' active':'');
+  document.getElementById('filter-bar').style.display=v==='matrix'?'flex':'none';
+  render();
+}
+
+function toggleProduct(id){
+  if(S.sel.includes(id)){if(S.sel.length<=2)return;S.sel=S.sel.filter(p=>p!==id);}
+  else S.sel=[...S.sel,id];
+  renderChips();render();
+}
+
+function toggleSection(id){
+  S.expanded.has(id)?S.expanded.delete(id):S.expanded.add(id);
+  render();
+}
+
+function renderChips(){
+  const row=document.getElementById('chips-row');
+  row.innerHTML='';
+  PRODUCTS.forEach(p=>{
+    const active=S.sel.includes(p.id);
+    const btn=document.createElement('button');
+    btn.className='chip';
+    btn.style.cssText=`border-color:${active?p.color:'var(--border2)'};background:${active?p.bg:'transparent'};color:${active?p.tc:'var(--text2)'}`;
+    btn.innerHTML=`<span style="font-size:9px;opacity:0.65;font-weight:400">${p.label}</span><span>${p.sub}</span>${active?'<i class="ti ti-check" style="font-size:10px" aria-hidden="true"></i>':''}`;
+    btn.onclick=()=>toggleProduct(p.id);
+    btn.setAttribute('aria-pressed',String(active));
+    row.appendChild(btn);
+  });
+}
+
+function cellHTML(val){
+  if(val===true) return`<span style="color:#22C55E;display:flex;align-items:center;justify-content:center"><i class="ti ti-check" style="font-size:16px" aria-label="included"></i></span>`;
+  if(val===false) return`<span style="color:#EF4444;display:flex;align-items:center;justify-content:center"><i class="ti ti-minus" style="font-size:14px" aria-label="not included"></i></span>`;
+  if(val==='__BETA__') return`<span style="display:flex;align-items:center;justify-content:center"><span class="beta-badge">Beta</span></span>`;
+  if(val==="N/A") return`<span style="color:var(--text3);font-size:10px;display:block;text-align:center">N/A</span>`;
+  return`<span style="font-size:10px;color:var(--text2);display:block;text-align:center;line-height:1.4;padding:0 5px">${val}</span>`;
+}
+
+function isTruthy(v){return v===true||v==='__BETA__'||(typeof v==='string'&&v!=='N/A'&&v!==false);}
+
+function getFiltered(){
+  const q=(document.getElementById('search-input')||{}).value||'';
+  const sec=(document.getElementById('section-select')||{}).value||'all';
+  const diffs=(document.getElementById('diffs-only')||{}).checked||false;
+  const visP=PRODUCTS.filter(p=>S.sel.includes(p.id));
+  return SECTIONS
+    .filter(s=>sec==='all'||s.id===sec)
+    .map(s=>({...s,features:s.features.filter(f=>{
+      const ms=!q||f.label.toLowerCase().includes(q.toLowerCase());
+      const md=!diffs||(new Set(visP.map(p=>JSON.stringify(f[p.id]))).size>1);
+      return ms&&md;
+    })}))
+    .filter(s=>s.features.length>0);
+}
+
+function renderMatrix(){
+  const visP=PRODUCTS.filter(p=>S.sel.includes(p.id));
+  const sections=getFiltered();
+  if(!sections.length)return`<div class="empty-state"><i class="ti ti-search-off" style="font-size:28px;display:block;margin-bottom:10px" aria-hidden="true"></i>No features match your filters</div>`;
+  const colW=Math.max(115,Math.floor(580/visP.length));
+  const col=`minmax(0,1fr) ${visP.map(()=>colW+'px').join(' ')}`;
+
+  let h=`<div class="matrix-wrap" role="table" aria-label="Feature comparison matrix">`;
+  h+=`<div class="matrix-header-row" style="grid-template-columns:${col}" role="row">`;
+  h+=`<div class="feat-col-header" role="columnheader">Feature</div>`;
+  visP.forEach(p=>{
+    h+=`<div class="prod-col-header" style="background:${S.hl===p.id?'rgba(255,255,255,0.06)':'transparent'}"
+      onmouseenter="S.hl='${p.id}';renderHL()" onmouseleave="S.hl=null;renderHL()" role="columnheader">
+      <div style="font-size:9px;color:${p.color};font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:1px">${p.label}</div>
+      <div style="font-size:13px;font-weight:600;color:#fff">${p.sub}</div>
+    </div>`;
+  });
+  h+=`</div>`;
+
+  sections.forEach((section,si)=>{
+    const exp=S.expanded.has(section.id);
+    h+=`<button class="section-row" style="grid-template-columns:${col}${si>0?';border-top:1px solid var(--border2)':''}"
+      onclick="toggleSection('${section.id}')" aria-expanded="${exp}">`;
+    h+=`<div class="section-label-cell">
+      <i class="ti ${section.icon}" style="font-size:13px;color:var(--sonar-orange)" aria-hidden="true"></i>
+      <span style="font-size:12px;font-weight:600;color:var(--text);letter-spacing:0.01em">${section.label}</span>
+      <span style="font-size:11px;color:var(--text3);font-weight:400">(${section.features.length})</span>
+      <i class="ti ${exp?'ti-chevron-up':'ti-chevron-down'}" style="font-size:11px;color:var(--text3);margin-left:auto;margin-right:12px" aria-hidden="true"></i>
+    </div>`;
+    visP.forEach(()=>{h+=`<div style="border-left:1px solid var(--border)"></div>`;});
+    h+=`</button>`;
+
+    if(exp){
+      section.features.forEach((f,fi)=>{
+        const vals=visP.map(p=>JSON.stringify(f[p.id]));
+        const allSame=new Set(vals).size===1;
+        const rowBg=fi%2===0?'var(--bg)':'var(--bg2)';
+        h+=`<div class="feat-row" style="grid-template-columns:${col};background:${rowBg};${fi<section.features.length-1?'border-bottom:1px solid var(--border)':''}" role="row">`;
+        h+=`<div class="feat-name-cell" role="cell">${f.label}${!allSame?'<span class="diff-dot" title="Values differ across editions"></span>':''}</div>`;
+        visP.forEach(p=>{
+          h+=`<div class="val-cell" data-pid="${p.id}"
+            onmouseenter="S.hl='${p.id}';renderHL()" onmouseleave="S.hl=null;renderHL()"
+            style="background:${S.hl===p.id?p.bg:'transparent'}" role="cell">${cellHTML(f[p.id])}</div>`;
+        });
+        h+=`</div>`;
+      });
+    }
+  });
+  h+=`</div>`;
+  return h;
+}
+
+function renderOverview(){
+  const visP=PRODUCTS.filter(p=>S.sel.includes(p.id));
+  let h=`<div class="card-grid">`;
+  visP.forEach(p=>{
+    const all=SECTIONS.flatMap(s=>s.features);
+    const inc=all.filter(f=>isTruthy(f[p.id]));
+    const pct=Math.round(inc.length/all.filter(f=>f[p.id]!=='N/A').length*100);
+    h+=`<div class="edition-card">`;
+    h+=`<div style="height:4px;background:${p.color}"></div>`;
+    h+=`<div class="card-header">
+      <p style="font-size:10px;font-weight:600;color:${p.color};text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px">${p.label}</p>
+      <h3 style="font-size:18px;font-weight:600;color:var(--text);letter-spacing:-0.01em;margin-bottom:6px">${p.sub}</h3>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="flex:1;height:4px;border-radius:2px;background:var(--bg3);overflow:hidden">
+          <div style="height:100%;width:${pct}%;background:${p.color};border-radius:2px"></div>
+        </div>
+        <span style="font-size:11px;font-weight:600;color:${p.color};white-space:nowrap">${pct}% coverage</span>
+      </div>
+    </div>`;
+    SECTIONS.forEach(section=>{
+      const incS=section.features.filter(f=>isTruthy(f[p.id]));
+      const noS=section.features.filter(f=>f[p.id]===false);
+      if(!incS.length)return;
+      h+=`<div class="section-line">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px">
+          <i class="ti ${section.icon}" style="font-size:12px;color:var(--sonar-orange)" aria-hidden="true"></i>
+          <span style="font-size:10px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.07em">${section.label}</span>
+          <span style="margin-left:auto;font-size:10px;color:var(--text3)">${incS.length}/${section.features.length}</span>
+        </div><div>`;
+      incS.slice(0,5).forEach(f=>{
+        const lbl=f[p.id]==='__BETA__'?`${f.label} (beta)`:typeof f[p.id]==='string'?`${f.label}: ${f[p.id]}`:f.label;
+        h+=`<span class="tag" style="background:${p.bg};color:${p.tc}">${lbl}</span>`;
+      });
+      if(noS.length)h+=`<span class="tag" style="background:#FEE2E2;color:#991B1B">−${noS.length} not included</span>`;
+      h+=`</div></div>`;
+    });
+    h+=`<div style="padding:10px 18px">
+      <a href="https://www.sonarsource.com/plans-and-pricing/${p.id.startsWith('cloud')?'':'sonarqube/'}" target="_blank" rel="noopener"
+        style="display:flex;align-items:center;justify-content:center;gap:6px;padding:8px 12px;border-radius:var(--radius);border:1px solid ${p.color};background:transparent;color:${p.color};font-size:12px;font-weight:600;text-decoration:none;transition:all 0.13s"
+        onmouseover="this.style.background='${p.bg}'" onmouseout="this.style.background='transparent'">
+        View pricing <i class="ti ti-external-link" style="font-size:12px" aria-hidden="true"></i>
+      </a>
+    </div></div>`;
+  });
+  h+=`</div>`;
+  return h;
+}
+
+function renderHL(){
+  document.querySelectorAll('.prod-col-header').forEach((el,i)=>{
+    const p=PRODUCTS.filter(p=>S.sel.includes(p.id))[i];
+    if(p)el.style.background=S.hl===p.id?'rgba(255,255,255,0.06)':'transparent';
+  });
+  document.querySelectorAll('.val-cell').forEach(el=>{
+    const pid=el.getAttribute('data-pid');
+    const p=PRODUCTS.find(x=>x.id===pid);
+    if(p)el.style.background=S.hl===p.id?p.bg:'transparent';
+  });
+}
+
+function render(){
+  document.getElementById('main-content').innerHTML=
+    S.view==='matrix'?renderMatrix():renderOverview();
+}
+
+renderChips();
+render();
+</script>
+</body>
+</html>

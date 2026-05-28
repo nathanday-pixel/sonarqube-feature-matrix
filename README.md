@@ -5,7 +5,7 @@ A Quick Feature Matrix for SonarQube
 
 An interactive, single-file web app for comparing SonarQube Cloud and Server editions. Built for internal use and customer-facing conversations.
 
-**Live URL:** `https://your-username.github.io/sonarqube-feature-matrix/`
+**Live URL:** `https://nathanday-pixel.github.io/sonarqube-feature-matrix/`
 
 ---
 

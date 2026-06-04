@@ -425,7 +425,7 @@ function renderOverview(){
         const lbl=f[p.id]==='__BETA__'?`${f.label} (beta)`:typeof f[p.id]==='string'?`${f.label}: ${f[p.id]}`:f.label;
         h+=`<span class="tag" style="background:${p.bg};color:${p.tc}">${lbl}</span>`;
       });
-      if(noS.length)h+=`<span class="tag" style="background:#FEE2E2;color:#991B1B">−${noS.length} not included</span>`;
+
       h+=`</div></div>`;
     });
     h+=`<div style="padding:10px 18px">
